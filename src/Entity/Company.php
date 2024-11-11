@@ -55,12 +55,19 @@ class Company
     #[ORM\Column(length: 20, nullable: true)]
     private ?string $mobile = null;
 
+    /**
+     * @var Collection<int, Product>
+     */
+    #[ORM\OneToMany(targetEntity: Product::class, mappedBy: 'companyId')]
+    private Collection $products;
+
 
 
     public function __construct()
     {
         $this->user = new ArrayCollection();
         $this->createdAt = new \DateTimeImmutable();
+        $this->products = new ArrayCollection();
         
     }
    
@@ -241,6 +248,36 @@ class Company
     public function setMobile(?int $mobile): static
     {
         $this->mobile = $mobile;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Product>
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $product): static
+    {
+        if (!$this->products->contains($product)) {
+            $this->products->add($product);
+            $product->setCompanyId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeProduct(Product $product): static
+    {
+        if ($this->products->removeElement($product)) {
+            // set the owning side to null (unless already changed)
+            if ($product->getCompanyId() === $this) {
+                $product->setCompanyId(null);
+            }
+        }
 
         return $this;
     }
