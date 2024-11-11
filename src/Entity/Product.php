@@ -30,6 +30,9 @@ class Product
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 0, nullable: true)]
     private ?string $TVA = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $codeProduct = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -91,6 +94,18 @@ class Product
     public function setTVA(?string $TVA): static
     {
         $this->TVA = $TVA;
+
+        return $this;
+    }
+
+    public function getCodeProduct(): ?string
+    {
+        return $this->codeProduct;
+    }
+
+    public function setCodeProduct(string $codeProduct): static
+    {
+        $this->codeProduct = $codeProduct;
 
         return $this;
     }
